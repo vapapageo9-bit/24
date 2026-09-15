@@ -1,0 +1,13 @@
+{
+  "name": "shotclock24",
+  "version": "1.0.0",
+  "description": "Basketball 24/14 shot clock, synced across devices on the local network",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "express": "^4.19.2",
+    "ws": "^8.18.0"
+  }
+}

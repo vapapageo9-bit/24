@@ -1,0 +1,31 @@
+
+<!DOCTYPE html><html><head><meta charset="utf-8"><title>Shot Clock</title>
+<script src="/socket.io/socket.io.js"></script>
+<style>
+body{margin:0;background:#000;color:red;font-family:monospace;text-align:center}
+#clock{font-size:min(70vw,70vh);font-weight:bold;text-shadow:0 0 20px red;margin-top:5vh}
+.controls{margin-top:20px}.controls button{font-size:24px;padding:12px 24px;margin:5px}
+:fullscreen .controls{display:none}
+</style></head><body>
+<div id="clock">24.0</div>
+<div class="controls">
+<button onclick="socket.emit('toggle')">START/STOP</button>
+<button onclick="socket.emit('start24')">24</button>
+<button onclick="socket.emit('start14')">14</button>
+<button onclick="socket.emit('reset')">RESET</button>
+<button onclick="toggleFullscreen()">FULLSCREEN</button>
+</div>
+<audio id="buzzer" preload="auto"><source src="buzzer.mp3" type="audio/mpeg"></audio>
+<script>
+const socket=io();
+socket.on('update',d=>{const c=document.getElementById('clock');c.textContent=Number(d.time).toFixed(1);c.style.color=d.time<=5?'orange':'red';});
+socket.on('buzzer',()=>{const b=document.getElementById('buzzer');b.currentTime=0;b.play().catch(()=>{});});
+document.addEventListener('keydown',e=>{
+if(e.code==='Space'){e.preventDefault();socket.emit('toggle');}
+if(e.key==='1')socket.emit('start24');
+if(e.key==='2')socket.emit('start14');
+if(e.key.toLowerCase()==='r')socket.emit('reset');
+if(e.key.toLowerCase()==='f')toggleFullscreen();
+});
+function toggleFullscreen(){if(!document.fullscreenElement)document.documentElement.requestFullscreen();else document.exitFullscreen();}
+</script></body></html>
